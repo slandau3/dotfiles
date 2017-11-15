@@ -34,16 +34,31 @@ Plug 'tpope/vim-surround'
 
 Plug 'tpope/vim-fireplace'
 
+Plug 'tpope/vim-fugitive'
+
+Plug 'airblade/vim-gitgutter'
+
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
 Plug 'majutsushi/tagbar'
 
-Plug 'mileszs/ack.vim'
+"Plug 'mileszs/ack.vim'
 
 Plug 'christoomey/vim-tmux-navigator'
 
+" Code snippets
+Plug 'SirVer/ultisnips'
+
+Plug 'w0rp/ale'
+
 "Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
+
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
 
 "Tag stuff
 " ----- xolox/vim-easytags settings -----
@@ -55,18 +70,20 @@ let g:easytags_async = 1
 let g:easytags_dynamic_files = 2
 let g:easytags_resolve_links = 1
 let g:easytags_suppress_ctags_warning = 1
-let g:ackprg = 'ag --vimgrep'
+"let g:ackprg = 'rg --vimgrep'
+set grepprg=rg\ --vimgrep
+set rtp+=~/.fzf
 
 " status bar
 set laststatus=2
 "
 " base 16 color settings
-set background=dark
-let base16colorspace=256
-colorscheme office-dark
+"set background=dark
+"let base16colorspace=256
+"colorscheme office-dark
 
-let g:office_dark_CursorLineNr = 'off'
-let g:office_dark_LineNr = 'off'
+"let g:office_dark_CursorLineNr = 'off'
+"let g:office_dark_LineNr = 'off'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
@@ -97,7 +114,7 @@ set showmatch       " Show matching brackets.
 "set colorcolumn=80
 
 " enables mouse support
-set mouse=a
+set mouse=r
 
 " enable linenumbers
 set number
@@ -113,6 +130,7 @@ set autowrite       " Automatically save before commands like :next and :make
 
 set undofile
 
+set clipboard=unnamed
 "make space leader
 let mapleader=" "
 
@@ -122,7 +140,7 @@ nnoremap <Leader>tb :TagbarToggle<Cr>
 "fzf stuff
 nmap <Leader>ff :Files<Cr>
 nmap <Leader>tt :Tags<Cr>
-nmap <Leader>bt :BTags<Cr>
+nmap <Leader>ji :BTags<Cr>
 nmap <Leader>bb :Buffers<Cr>
 
 " Clear highlighted stuff
@@ -132,21 +150,20 @@ nnoremap <Leader>sc :noh<Cr>
 " Used when you have a line that wraps
 nnoremap j gj
 nnoremap k gk
-nnoremap <C-j> 5j
-nnoremap <C-k> 5k
 
 " Let me go back to normal mode with jk
 inoremap jk <Esc>
 nnoremap <Leader>fs :w<cr>
+cmap ;< \<\><Left><Left>
+cmap ;( \(\)<Left><Left>
+cnoremap <C-l> <Right><Right>
+cnoremap <C-h> <Left><Left>
 
 "Nerdtree stuff
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
-
-let g:ctrlp_funky_matchtype = 'path'
-let g:ctrlp_funky_syntax_highlight = 1
 
 
 syntax on
@@ -186,6 +203,12 @@ augroup END
    let @@ = system('pbpaste')
  endfunction
 
-vnoremap <silent> y y:call ClipboardYank()<cr>
-vnoremap <silent> d d:call ClipboardYank()<cr>
-nnoremap <silent> p :call ClipboardPaste()<cr>p
+"vnoremap <silent> y y:call ClipboardYank()<cr>
+"vnoremap <silent> d d:call ClipboardYank()<cr>
+"nnoremap <silent> p :call ClipboardPaste()<cr>p
+
+" Linting stuff (ALE)
+let g:ale_fix_on_save = 1
+
+packloadall
+silent! helptags ALL
